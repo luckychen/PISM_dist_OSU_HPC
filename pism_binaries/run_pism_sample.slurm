@@ -24,6 +24,10 @@ source active_pism.sh
 export OMP_NUM_THREADS=1
 unset SLURM_CPU_BIND
 
+# Suppress KNEM warning (device not available on CEOAS HPC)
+export OMPI_MCA_btl_sm_use_knem=0
+export OMPI_MCA_smsc=^knem
+
 # Display job information
 echo "======== Job Resources ========"
 echo "Number of nodes: $SLURM_NNODES"

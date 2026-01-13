@@ -228,6 +228,10 @@ To create your own multi-node simulation:
 # Load PISM environment
 source ~/pism/active_pism.sh
 
+# Suppress OpenMPI KNEM warnings (device not available on cluster)
+export OMPI_MCA_btl_sm_use_knem=0
+export OMPI_MCA_smsc=^knem
+
 # Create output directory
 RUN_DIR="$HOME/pism/pism_binaries/runs/my_run_${SLURM_JOB_ID}"
 mkdir -p "$RUN_DIR"
@@ -334,6 +338,10 @@ Create a new file `my_simulation.slurm`:
 
 # Load PISM environment
 source ~/pism/active_pism.sh
+
+# Suppress OpenMPI KNEM warnings (device not available on cluster)
+export OMPI_MCA_btl_sm_use_knem=0
+export OMPI_MCA_smsc=^knem
 
 # Create output directory
 RUN_DIR="$HOME/pism/pism_binaries/runs/my_run_${SLURM_JOB_ID}"
@@ -446,7 +454,14 @@ WARNING: Failed to open /dev/knem device
 ```
 
 **Solution:**
-This warning is **normal** and can be safely ignored. OpenMPI falls back to alternative communication methods. Performance is not affected.
+The included job scripts (`run_pism_sample.slurm` and `run_pism_multinode.slurm`) already suppress this warning. If you create your own job scripts, add these lines after sourcing the PISM environment:
+
+```bash
+export OMPI_MCA_btl_sm_use_knem=0
+export OMPI_MCA_smsc=^knem
+```
+
+This disables OpenMPI's attempt to use the KNEM device (which is not available on CEOAS HPC) and eliminates the warning without affecting performance.
 
 ### Issue: CPU Binding Errors
 

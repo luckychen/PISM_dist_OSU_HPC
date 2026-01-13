@@ -29,6 +29,10 @@ source ~/pism/active_pism.sh
 echo "PISM environment loaded successfully"
 echo ""
 
+# Suppress KNEM warning (device not available on CEOAS HPC)
+export OMPI_MCA_btl_sm_use_knem=0
+export OMPI_MCA_smsc=^knem
+
 # Create output directory
 RUN_DIR="$HOME/pism/pism_binaries/runs/multinode_run_${SLURM_JOB_ID}"
 mkdir -p "$RUN_DIR"
