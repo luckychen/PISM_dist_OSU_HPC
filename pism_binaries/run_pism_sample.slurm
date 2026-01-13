@@ -16,11 +16,8 @@ echo "Started at: $(date)"
 echo "========================================"
 echo ""
 
-# Load spack environment with dependencies
+# Load PISM environment (includes spack setup)
 cd ~/pism
-source spack_setup.sh
-
-# Source the PISM environment
 source active_pism.sh
 
 # Disable SLURM CPU binding and let mpirun handle it

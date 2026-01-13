@@ -34,7 +34,7 @@ fi
 # Check for key files
 echo "[2/6] Checking required files..."
 MISSING_FILES=()
-for file in ../active_pism.sh ../spack_setup.sh bin/pism; do
+for file in ../active_pism.sh bin/pism; do
     if [ ! -f "$file" ]; then
         MISSING_FILES+=("$file")
     fi
@@ -50,11 +50,6 @@ fi
 # Load environment
 echo "[3/6] Loading PISM environment..."
 cd ~/pism
-if ! source spack_setup.sh 2>/dev/null; then
-    echo "✗ Failed to load spack environment"
-    exit 1
-fi
-
 if ! source active_pism.sh 2>/dev/null; then
     echo "✗ Failed to load PISM environment"
     exit 1
