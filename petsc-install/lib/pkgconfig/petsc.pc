@@ -1,0 +1,23 @@
+prefix=/fs1/home/ceoas/chenchon/pism/petsc-install
+exec_prefix=${prefix}
+includedir=${prefix}/include
+libdir=${prefix}/lib
+ccompiler=/fs1/local/ceoas/spack/opt/spack/linux-rocky9-sandybridge/gcc-13.2.0/openmpi-5.0.5-gpan6gdak7hjotoqee2umdghes7xfv2r/bin/mpicc
+cflags_extra=-fPIC -Wall -Wwrite-strings -Wno-unknown-pragmas -Wno-lto-type-mismatch -Wno-stringop-overflow -fstack-protector -fvisibility=hidden -O3 -march=sandybridge
+cflags_dep=-MMD -MP
+ldflag_rpath=-Wl,-rpath,
+cxxcompiler=/fs1/local/ceoas/spack/opt/spack/linux-rocky9-sandybridge/gcc-13.2.0/openmpi-5.0.5-gpan6gdak7hjotoqee2umdghes7xfv2r/bin/mpicxx
+cxxflags_extra=-Wall -Wwrite-strings -Wno-strict-aliasing -Wno-unknown-pragmas -Wno-lto-type-mismatch -Wno-psabi -fstack-protector -fvisibility=hidden -O3 -march=sandybridge  -std=gnu++20 -fPIC
+fcompiler=/fs1/local/ceoas/spack/opt/spack/linux-rocky9-sandybridge/gcc-13.2.0/openmpi-5.0.5-gpan6gdak7hjotoqee2umdghes7xfv2r/bin/mpif90
+fflags_extra=-fPIC -Wall -ffree-line-length-none -ffree-line-length-0 -Wno-lto-type-mismatch -Wno-unused-dummy-argument -O3 -march=sandybridge
+cudacompiler=nvcc
+cudaflags_extra=-ccbin /fs1/local/ceoas/spack/opt/spack/linux-rocky9-sandybridge/gcc-13.2.0/openmpi-5.0.5-gpan6gdak7hjotoqee2umdghes7xfv2r/bin/mpicxx -std=c++20 -Xcompiler -fPIC -Xcompiler -fvisibility=hidden -O3
+cudalib=
+cudainclude=
+
+Name: PETSc
+Description: Library to solve ODEs and algebraic equations
+Version: 3.21.6
+Cflags:  -I${includedir}
+Libs: -L${libdir} -lpetsc
+Libs.private: -L/fs1/home/ceoas/chenchon/pism/petsc-install/lib -L/fs1/home/ceoas/chenchon/pism/local_stack/lib -L/fs1/home/ceoas/chenchon/pism/local_stack/lib64 -L/fs1/local/ceoas/spack/opt/spack/linux-rocky9-sandybridge/gcc-13.2.0/hdf5-1.14.3-p2dy6qz3shofau35b6ikibxqo6onthbm/lib -L/fs1/local/ceoas/spack/opt/spack/linux-rocky9-sandybridge/gcc-13.2.0/zlib-ng-2.1.6-be2z2spal7uib5osqfouapstexwk5ckg/lib -L/fs1/local/ceoas/spack/opt/spack/linux-rocky9-sandybridge/gcc-13.2.0/openmpi-5.0.5-gpan6gdak7hjotoqee2umdghes7xfv2r/lib -L/fs1/local/ceoas/spack/opt/spack/linux-rocky9-sandybridge/gcc-13.2.0/gcc-13.2.0-kupqaiquixn5dpbdfjzn2ycm5ahnmurn/lib/gcc/x86_64-pc-linux-gnu/13.2.0 -L/fs1/local/ceoas/spack/opt/spack/linux-rocky9-sandybridge/gcc-13.2.0/gcc-13.2.0-kupqaiquixn5dpbdfjzn2ycm5ahnmurn/lib/gcc -L/fs1/local/ceoas/spack/opt/spack/linux-rocky9-sandybridge/gcc-13.2.0/gcc-13.2.0-kupqaiquixn5dpbdfjzn2ycm5ahnmurn/lib64 -L/fs1/local/ceoas/spack/opt/spack/linux-rocky9-sandybridge/gcc-13.2.0/gcc-13.2.0-kupqaiquixn5dpbdfjzn2ycm5ahnmurn/lib -lHYPRE -lfftw3_mpi -lfftw3 -lflapack -lfblas -lparmetis -lmetis -lnetcdf -lhdf5_hl -lhdf5 -lm -lz -lmpi_usempif08 -lmpi_usempi_ignore_tkr -lmpi_mpifh -lmpi -lgfortran -lm -lgfortran -lm -lgcc_s -lquadmath -lstdc++ -lquadmath
