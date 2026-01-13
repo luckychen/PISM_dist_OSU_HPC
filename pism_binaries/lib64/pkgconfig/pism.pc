@@ -1,0 +1,12 @@
+prefix=/fs1/home/ceoas/chenchon/pism/pism_binaries
+exec_prefix=${prefix}/bin
+libdir=${prefix}/lib64
+includedir=${prefix}/include
+compiler=/fs1/local/ceoas/spack/opt/spack/linux-rocky9-sandybridge/gcc-13.2.0/openmpi-5.0.5-gpan6gdak7hjotoqee2umdghes7xfv2r/bin/mpicxx 
+
+Name: pism
+Description: Parallel Ice Sheet Model library
+Version: 2.2.2
+Libs: -L${libdir} -lpism
+Libs.private: -lpetsc
+Cflags: -I${includedir}

@@ -1,0 +1,22 @@
+# Log files from SLURM jobs
+*.log
+
+# Simulation output directories
+runs/
+
+# Temporary files
+*.tmp
+*~
+.DS_Store
+
+# SLURM output files
+slurm-*.out
+
+# Editor backup files
+*.swp
+*.swo
+*~
+
+# Python cache
+__pycache__/
+*.pyc

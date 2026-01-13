@@ -1,0 +1,23 @@
+# NetCDF C Configuration Summary
+==============================
+
+# General
+-------
+NetCDF Version:		4.3.1
+Configured On:		Fri 09 Jan 2026 12:37:37 PM PST
+Host System:		x86_64-Linux-5.14.0-362.8.1.el9_3.x86_64
+Build Directory: 	/home/ceoas/chenchon/pism/netcdf-cxx4-4.3.1/build
+Install Prefix:         
+
+# Compiling Options
+-----------------
+C Compiler:		/fs1/local/ceoas/spack/opt/spack/linux-rocky9-sandybridge/gcc-13.2.0/openmpi-5.0.5-gpan6gdak7hjotoqee2umdghes7xfv2r/bin/mpicc
+CFLAGS:			 -g -Wall -Wno-unused-variable -Wno-unused-parameter -g
+CPPFLAGS:		-O3 -march=sandybridge -fPIC -g -Wall -Wno-unused-variable -Wno-unused-parameter -g -Wall -Wconversion
+LDFLAGS:		  -Wl,--no-undefined
+AM_CFLAGS:		
+AM_CPPFLAGS:		
+AM_LDFLAGS:		
+Shared Library:		yes
+Static Library:		no
+Extra libraries:	

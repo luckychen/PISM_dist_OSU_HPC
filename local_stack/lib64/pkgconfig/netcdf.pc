@@ -1,0 +1,13 @@
+prefix=/home/ceoas/chenchon/pism/local_stack
+exec_prefix=/home/ceoas/chenchon/pism/local_stack
+libdir=/home/ceoas/chenchon/pism/local_stack/lib64
+includedir=/home/ceoas/chenchon/pism/local_stack/include
+ccompiler=/fs1/local/ceoas/spack/opt/spack/linux-rocky9-sandybridge/gcc-13.2.0/openmpi-5.0.5-gpan6gdak7hjotoqee2umdghes7xfv2r/bin/mpicc
+
+Name: netCDF
+Description: NetCDF Client Library for C
+URL: https://www.unidata.ucar.edu/netcdf
+Version: 4.9.2
+Libs: -L${libdir} -lnetcdf
+Libs.private: -lhdf5_hl -lhdf5 -lm -lz -lzstd -lbz2 -lcurl -lxml2
+Cflags: -I${includedir}
