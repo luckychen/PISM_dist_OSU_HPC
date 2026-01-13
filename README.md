@@ -88,7 +88,7 @@ pism/
 │   ├── verify_setup.sh     # Installation verification script
 │   ├── run_pism_sample.slurm  # Example single-node SLURM job
 │   ├── run_pism_multinode.slurm  # Example multi-node SLURM job
-│   └── README.md           # Detailed usage guide
+│    
 ├── local_stack/            # Local dependencies (FFTW, NetCDF)
 │   └── lib/
 └── petsc-install/          # PETSc 3.21.6 installation
