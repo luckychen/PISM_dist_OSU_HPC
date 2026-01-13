@@ -17,7 +17,8 @@ echo "========================================"
 echo ""
 
 # Load PISM environment (includes spack setup)
-cd ~/pism
+# Get the directory where this script is located
+cd $SLURM_SUBMIT_DIR/../
 source active_pism.sh
 
 # Disable SLURM CPU binding and let mpirun handle it
@@ -46,7 +47,7 @@ echo "=================================="
 echo ""
 
 # Create a working directory for this job
-WORK_DIR="$HOME/pism/pism_binaries/runs/run_${SLURM_JOB_ID}"
+WORK_DIR="$PISM_PACKAGE_ROOT/pism_binaries/runs/run_${SLURM_JOB_ID}"
 mkdir -p "$WORK_DIR"
 cd "$WORK_DIR"
 

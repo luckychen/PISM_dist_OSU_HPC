@@ -5,12 +5,12 @@ A ready-to-run PISM (Parallel Ice Sheet Model) installation for the CEOAS HPC cl
 ## Quick Start (5 Minutes)
 
 ```bash
-# 1. Clone the repository to your home directory
-cd ~
+# 1. Clone the repository to your desired location
+cd ~  # or any directory you prefer
 git clone https://github.com/luckychen/PISM_dist_OSU_HPC.git pism
 
 # 2. Navigate to the distribution directory
-cd ~/pism/pism_binaries
+cd pism/pism_binaries
 
 # 3. Verify the installation
 bash verify_setup.sh
@@ -23,6 +23,8 @@ squeue -u $USER
 ```
 
 That's it! The test job runs PISM verification Test G and completes in about 2 minutes.
+
+**Note:** All scripts are fully portable - you can install PISM to any directory and they will automatically detect the correct paths.
 
 ## What's Included
 
@@ -62,20 +64,20 @@ This distribution provides:
 ### Step 1: Clone the Repository
 
 ```bash
-# Navigate to your home directory
-cd ~
+# Navigate to your desired installation directory
+cd ~  # or any directory you prefer
 
 # Clone the repository
 git clone https://github.com/luckychen/PISM_dist_OSU_HPC.git pism
 
 # Check the installation size
-du -sh ~/pism
+du -sh pism
 # Expected: ~200-300 MB
 ```
 
 ### Step 2: Verify Directory Structure
 
-Your `~/pism` directory should contain:
+Your `pism` directory should contain:
 
 ```
 pism/
@@ -101,7 +103,7 @@ pism/
 Run the verification script to ensure everything is set up correctly:
 
 ```bash
-cd ~/pism/pism_binaries
+cd pism/pism_binaries
 bash verify_setup.sh
 ```
 
@@ -126,7 +128,7 @@ If any checks fail, see the Troubleshooting section below.
 The included `run_pism_sample.slurm` script runs PISM verification Test G:
 
 ```bash
-cd ~/pism/pism_binaries
+cd pism/pism_binaries
 sbatch run_pism_sample.slurm
 ```
 
@@ -175,7 +177,7 @@ PISM supports parallel execution across multiple compute nodes using MPI. This a
 The included `run_pism_multinode.slurm` script demonstrates running PISM across multiple nodes:
 
 ```bash
-cd ~/pism/pism_binaries
+cd pism/pism_binaries
 sbatch run_pism_multinode.slurm
 ```
 

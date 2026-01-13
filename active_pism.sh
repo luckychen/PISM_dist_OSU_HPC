@@ -22,6 +22,7 @@ export OMPI_MCA_psec=^munge
 export OMPI_MCA_accelerator=^cuda
 export OMPI_MCA_rcache=^gpusm,rgpusm
 export OMPI_MCA_btl=^smcuda
+export OMPI_MCA_smsc=^knem
 
 # 4. Set the Path to the PISM executable
 export PATH="$PISM_PACKAGE_ROOT/pism_binaries/bin:$PATH"

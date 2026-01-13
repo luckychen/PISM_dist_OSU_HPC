@@ -11,7 +11,7 @@ echo ""
 # Check if we're in the right directory
 if [ ! -f "verify_setup.sh" ]; then
     echo "ERROR: Please run this script from the pism_binaries directory"
-    echo "Usage: cd ~/pism/pism_binaries && bash verify_setup.sh"
+    echo "Usage: cd /path/to/pism/pism_binaries && bash verify_setup.sh"
     exit 1
 fi
 
@@ -49,7 +49,7 @@ fi
 
 # Load environment
 echo "[3/6] Loading PISM environment..."
-cd ~/pism
+cd ..
 if ! source active_pism.sh 2>/dev/null; then
     echo "✗ Failed to load PISM environment"
     exit 1
@@ -67,10 +67,10 @@ fi
 
 # Check PISM version
 echo "[5/6] Checking PISM version..."
-if pism -version &> /dev/null; then
+if mpirun -np 1 pism -version &> /dev/null; then
     echo "✓ PISM runs successfully"
     echo "  Version info:"
-    pism -version 2>&1 | head -5 | sed 's/^/    /'
+    mpirun -np 1 pism -version 2>&1 | head -5 | sed 's/^/    /'
 else
     echo "✗ PISM failed to run"
     exit 1
