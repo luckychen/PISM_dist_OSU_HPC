@@ -86,7 +86,8 @@ pism/
 │   ├── share/              # Documentation and examples
 │   ├── include/            # Header files (for development)
 │   ├── verify_setup.sh     # Installation verification script
-│   ├── run_pism_sample.slurm  # Example SLURM job
+│   ├── run_pism_sample.slurm  # Example single-node SLURM job
+│   ├── run_pism_multinode.slurm  # Example multi-node SLURM job
 │   └── README.md           # Detailed usage guide
 ├── local_stack/            # Local dependencies (FFTW, NetCDF)
 │   └── lib/
@@ -164,6 +165,125 @@ NUMERICAL ERRORS evaluated at final time:
 ```
 
 All errors should be very small (< 0.01), indicating a successful test.
+
+## Running Multi-Node Simulations
+
+PISM supports parallel execution across multiple compute nodes using MPI. This allows you to run larger simulations with higher resolution and better performance.
+
+### Multi-Node Example Job
+
+The included `run_pism_multinode.slurm` script demonstrates running PISM across multiple nodes:
+
+```bash
+cd ~/pism/pism_binaries
+sbatch run_pism_multinode.slurm
+```
+
+**Configuration:**
+- **Nodes**: 4 compute nodes
+- **Total MPI tasks**: 16 (4 tasks per node)
+- **Grid**: 121×121×51 points (higher resolution)
+- **Duration**: 1000 model years
+- **Runtime**: ~1-2 minutes
+- **Output**: `pism_multinode_output.nc` (~18 MB)
+
+### Understanding the Multi-Node Configuration
+
+```bash
+#SBATCH --nodes=4              # Number of compute nodes
+#SBATCH --ntasks=16            # Total MPI processes across all nodes
+#SBATCH --ntasks-per-node=4    # MPI processes per node
+```
+
+**How it works:**
+- SLURM allocates 4 compute nodes
+- Each node runs 4 MPI processes
+- Total of 16 parallel processes work together
+- PISM automatically distributes the computational domain across all processes
+
+### Scaling Guidelines for Multi-Node Jobs
+
+| Simulation Size | Recommended Config | Expected Performance |
+|-----------------|-------------------|---------------------|
+| Small (61×61×31) | 1 node, 4 tasks | 2-5 min for 1000 years |
+| Medium (121×121×51) | 2-4 nodes, 8-16 tasks | 1-3 min for 1000 years |
+| Large (241×241×101) | 8-16 nodes, 32-64 tasks | 5-15 min for 1000 years |
+| Production runs | 16+ nodes, 64+ tasks | Hours for 10k+ years |
+
+### Creating Custom Multi-Node Jobs
+
+To create your own multi-node simulation:
+
+```bash
+#!/bin/bash
+#SBATCH --job-name=my_pism_job
+#SBATCH --partition=ceoas
+#SBATCH --nodes=8                # Adjust based on your needs
+#SBATCH --ntasks=32              # Adjust based on your needs
+#SBATCH --ntasks-per-node=4      # Adjust based on node architecture
+#SBATCH --time=04:00:00
+#SBATCH --output=output_%j.log
+#SBATCH --error=error_%j.log
+
+# Load PISM environment
+source ~/pism/active_pism.sh
+
+# Create output directory
+RUN_DIR="$HOME/pism/pism_binaries/runs/my_run_${SLURM_JOB_ID}"
+mkdir -p "$RUN_DIR"
+cd "$RUN_DIR"
+
+# Run your simulation with custom parameters
+mpirun --bind-to none --oversubscribe \
+    -np $SLURM_NTASKS pism \
+    -test G \
+    -Mx 241 -My 241 -Mz 101 \
+    -y 10000 \
+    -o output.nc
+```
+
+### Multi-Node Best Practices
+
+1. **Resource Selection:**
+   - Use `--ntasks-per-node` to control task distribution
+   - Match tasks to your simulation size (more grid points = more tasks beneficial)
+   - Don't over-allocate: diminishing returns beyond ~64-128 tasks for most problems
+
+2. **Performance Tips:**
+   - Larger grid sizes benefit more from multi-node parallelization
+   - Use time series output (`-ts_file`) to monitor progress
+   - Test with shorter runs first to verify configuration
+
+3. **MPI Flags:**
+   - Always include `--bind-to none --oversubscribe` for CEOAS HPC
+   - Use `-np $SLURM_NTASKS` to automatically use all allocated tasks
+
+4. **Monitoring:**
+   ```bash
+   # Check which nodes your job is using
+   squeue -j JOB_ID
+
+   # Watch output in real-time
+   tail -f output_JOB_ID.log
+   ```
+
+### Troubleshooting Multi-Node Jobs
+
+**Issue: Job won't allocate multiple nodes**
+
+Solution: Check partition limits and node availability
+```bash
+sinfo                    # Check partition status
+scontrol show partition ceoas  # Check partition limits
+```
+
+**Issue: Poor scaling performance**
+
+Solution: Your grid may be too small for the number of processes. Use larger grids (`-Mx`, `-My`, `-Mz`) or reduce number of tasks.
+
+**Issue: MPI communication errors**
+
+Solution: Ensure all nodes can communicate. The `--bind-to none --oversubscribe` flags handle most issues on CEOAS HPC.
 
 ## Understanding the Environment Setup
 
