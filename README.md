@@ -1,0 +1,615 @@
+# PISM Portable Distribution for CEOAS HPC
+
+A ready-to-run PISM (Parallel Ice Sheet Model) installation for the CEOAS HPC cluster at Oregon State University. This distribution includes pre-compiled binaries and all necessary dependencies, allowing you to run ice sheet simulations without building from source.
+
+## Quick Start (5 Minutes)
+
+```bash
+# 1. Clone the repository to your home directory
+cd ~
+git clone https://github.com/luckychen/PISM_dist_OSU_HPC.git pism
+
+# 2. Navigate to the distribution directory
+cd ~/pism/pism_binaries
+
+# 3. Verify the installation
+bash verify_setup.sh
+
+# 4. Submit a test job
+sbatch run_pism_sample.slurm
+
+# 5. Check job status
+squeue -u $USER
+```
+
+That's it! The test job runs PISM verification Test G and completes in about 2 minutes.
+
+## What's Included
+
+This distribution provides:
+
+- **PISM 2.2.2** - Pre-compiled ice sheet model binaries
+- **All Dependencies** - PETSc 3.21.6, NetCDF 4.9.2, FFTW 3.3.10, and more
+- **Environment Scripts** - Automatic setup of all required libraries
+- **Example Jobs** - Working SLURM job scripts
+- **Verification Tools** - Automated installation checker
+
+### What You DON'T Need
+
+- No compilation required
+- No dependency hunting
+- No manual library configuration
+- No root/admin privileges
+
+## System Requirements
+
+### Required (Available on CEOAS HPC)
+
+- **Cluster Access**: CEOAS HPC account
+- **Spack Environment**: Available at `/local/cluster/CEOAS/spack/`
+  - This is a **cluster-wide installation** accessible to all users
+  - No special permissions needed
+- **Job Scheduler**: SLURM access
+- **Architecture**: x86_64 (Sandybridge or newer)
+
+### Operating System
+
+- Rocky Linux 9 (CEOAS HPC standard)
+- Should work on any RHEL 9-compatible system with the same Spack environment
+
+## Installation Instructions
+
+### Step 1: Clone the Repository
+
+```bash
+# Navigate to your home directory
+cd ~
+
+# Clone the repository
+git clone https://github.com/luckychen/PISM_dist_OSU_HPC.git pism
+
+# Check the installation size
+du -sh ~/pism
+# Expected: ~200-300 MB
+```
+
+### Step 2: Verify Directory Structure
+
+Your `~/pism` directory should contain:
+
+```
+pism/
+├── active_pism.sh          # Single-source environment setup
+├── pism_binaries/          # Main distribution directory
+│   ├── bin/                # PISM executables (pism, pismr, etc.)
+│   ├── lib64/              # PISM shared libraries
+│   ├── share/              # Documentation and examples
+│   ├── include/            # Header files (for development)
+│   ├── verify_setup.sh     # Installation verification script
+│   ├── run_pism_sample.slurm  # Example SLURM job
+│   └── README.md           # Detailed usage guide
+├── local_stack/            # Local dependencies (FFTW, NetCDF)
+│   └── lib/
+└── petsc-install/          # PETSc 3.21.6 installation
+    ├── lib/
+    └── include/
+```
+
+### Step 3: Verify Installation
+
+Run the verification script to ensure everything is set up correctly:
+
+```bash
+cd ~/pism/pism_binaries
+bash verify_setup.sh
+```
+
+**Expected output:**
+```
+✓ Directory structure check passed
+✓ Required files check passed
+✓ Environment loading check passed
+✓ PISM executable check passed
+✓ PISM version check passed
+✓ SLURM availability check passed
+
+All checks passed! PISM is ready to use.
+```
+
+If any checks fail, see the Troubleshooting section below.
+
+## Running Your First Simulation
+
+### Submit the Sample Job
+
+The included `run_pism_sample.slurm` script runs PISM verification Test G:
+
+```bash
+cd ~/pism/pism_binaries
+sbatch run_pism_sample.slurm
+```
+
+**What this test does:**
+- Runs PISM verification Test G (standard benchmark)
+- Uses 4 MPI processes
+- Simulates 200 model years
+- Grid: 61×61×31 points
+- Runtime: ~2 minutes
+- Output: `test_g_output.nc` (~3.3 MB)
+
+### Monitor Job Status
+
+```bash
+# Check if job is running
+squeue -u $USER
+
+# View output logs (after job completes)
+cat pism_test_output_*.log
+
+# Check for errors
+cat pism_test_error_*.log
+
+# View the output file
+ls -lh runs/run_*/test_g_output.nc
+```
+
+### Expected Success Output
+
+Look for these lines in `pism_test_output_*.log`:
+
+```
+NUMERICAL ERRORS evaluated at final time:
+  geometry  :    prcntVOL        maxH         avH   relmaxETA
+           0       1e-16    0.004188    0.001589    0.000435
+```
+
+All errors should be very small (< 0.01), indicating a successful test.
+
+## Understanding the Environment Setup
+
+### The Magic Script: active_pism.sh
+
+This **single script** does everything needed to run PISM:
+
+```bash
+source ~/pism/active_pism.sh
+```
+
+**What it does:**
+1. Loads Spack environment from cluster installation
+2. Loads OpenMPI 5.0.5 (compiled with GCC 13.2.0)
+3. Loads GSL, HDF5, and other dependencies
+4. Sets compiler variables (mpicc, mpicxx, mpif77)
+5. Adds PISM binaries to PATH
+6. Configures library paths
+7. Sets PISM configuration file location
+
+**Key Feature:** Uses relative paths from script location, so it works regardless of where you clone the repository.
+
+### How It Works in Jobs
+
+The `run_pism_sample.slurm` script includes:
+
+```bash
+source ~/pism/active_pism.sh
+```
+
+This single line is all you need in your SLURM scripts. No manual path configuration required.
+
+## Creating Your Own Simulations
+
+### Example: Custom SLURM Job
+
+Create a new file `my_simulation.slurm`:
+
+```bash
+#!/bin/bash
+#SBATCH --job-name=my_pism_run
+#SBATCH --partition=ceoas
+#SBATCH --nodes=1
+#SBATCH --ntasks=8
+#SBATCH --time=01:00:00
+#SBATCH --output=my_output_%j.log
+#SBATCH --error=my_error_%j.log
+
+# Load PISM environment
+source ~/pism/active_pism.sh
+
+# Create output directory
+RUN_DIR="$HOME/pism/pism_binaries/runs/my_run_${SLURM_JOB_ID}"
+mkdir -p "$RUN_DIR"
+cd "$RUN_DIR"
+
+# Run your simulation
+mpirun --bind-to none --oversubscribe \
+    -np $SLURM_NTASKS pism \
+    -test G \
+    -Mx 121 -My 121 -Mz 51 \
+    -y 1000 \
+    -o my_output.nc
+
+echo "Simulation complete. Output in: $RUN_DIR"
+```
+
+Submit with:
+```bash
+sbatch my_simulation.slurm
+```
+
+### Common PISM Options
+
+- `-test [A-L]` - Run verification tests
+- `-i input.nc` - Input file for restart/initialization
+- `-Mx`, `-My`, `-Mz` - Grid resolution (higher = more detail)
+- `-Lz` - Vertical domain extent (meters)
+- `-y` - Simulation duration (years)
+- `-o output.nc` - Output file name
+- `-ts_file ts.nc` - Time series output
+- `-ts_times` - Time series frequency (e.g., `0:100:10000`)
+
+For full options:
+```bash
+# Interactive session
+srun --partition=ceoas --nodes=1 --ntasks=1 --time=00:10:00 --pty bash
+source ~/pism/active_pism.sh
+pism --help
+```
+
+## Available Tools
+
+The `~/pism/pism_binaries/bin/` directory includes:
+
+- `pism` - Main PISM executable (use this for tests and simulations)
+- `pism_flowline` - 1D flowline model
+- `pism_nc2cdo` - Convert output for CDO climate tools
+- `pism_fill_missing` - Fill missing data in NetCDF files
+- `pism_check_stationarity` - Check steady-state convergence
+
+## Example Simulations
+
+PISM includes examples in `~/pism/pism_binaries/share/doc/pism/examples/`:
+
+```bash
+cd ~/pism/pism_binaries/share/doc/pism/examples/
+ls -la
+```
+
+**Available examples:**
+- `antarctica/` - Antarctic Ice Sheet simulations
+- `std-greenland/` - Greenland Ice Sheet examples
+- `marine/` - Marine ice sheet tests (Ross Ice Shelf)
+- Verification tests embedded in PISM (use `-test` flag)
+
+## Troubleshooting
+
+### Issue: Library Not Found Errors
+
+**Symptom:**
+```
+libhdf5_hl.so.200: cannot open shared object file: No such file or directory
+```
+
+**Solution:**
+Ensure you source `active_pism.sh` before running PISM:
+```bash
+source ~/pism/active_pism.sh
+pism -version
+```
+
+### Issue: Spack Not Found
+
+**Symptom:**
+```
+/local/cluster/CEOAS/spack/share/spack/setup-env.sh: No such file or directory
+```
+
+**Solution:**
+This means you're not on the CEOAS HPC cluster or the Spack installation has moved. Contact your system administrator.
+
+### Issue: PISM Command Not Found
+
+**Symptom:**
+```
+bash: pism: command not found
+```
+
+**Solution:**
+1. Check that you sourced the environment: `source ~/pism/active_pism.sh`
+2. Verify PATH: `echo $PATH | grep pism`
+3. Check binary exists: `ls ~/pism/pism_binaries/bin/pism`
+
+### Issue: MPI Warning About /dev/knem
+
+**Symptom:**
+```
+WARNING: Failed to open /dev/knem device
+```
+
+**Solution:**
+This warning is **normal** and can be safely ignored. OpenMPI falls back to alternative communication methods. Performance is not affected.
+
+### Issue: CPU Binding Errors
+
+**Symptom:**
+```
+Error: require binding processes to more cpus than are available
+```
+
+**Solution:**
+Use these MPI flags in your job scripts:
+```bash
+mpirun --bind-to none --oversubscribe -np $SLURM_NTASKS pism ...
+```
+
+### Issue: Job Stuck in Queue
+
+**Check cluster status:**
+```bash
+squeue -u $USER      # Your jobs
+sinfo                # Partition availability
+scontrol show job <job_id>  # Job details
+```
+
+**Common causes:**
+- Requesting unavailable partition
+- Resource limits exceeded
+- Cluster maintenance
+
+### Issue: Verification Script Fails
+
+If `verify_setup.sh` reports failures:
+
+1. **Check directory structure:**
+   ```bash
+   ls -la ~/pism/
+   ```
+
+2. **Ensure Git didn't corrupt files:**
+   ```bash
+   cd ~/pism
+   git status
+   git fsck
+   ```
+
+3. **Re-clone if necessary:**
+   ```bash
+   cd ~
+   mv pism pism_backup
+   git clone https://github.com/luckychen/PISM_dist_OSU_HPC.git pism
+   ```
+
+## Performance Guidelines
+
+### Choosing Resources
+
+| Grid Size | MPI Tasks | Memory | Time (10k years) |
+|-----------|-----------|--------|------------------|
+| 61×61×31 | 4 | ~2 GB | 5-15 min |
+| 121×121×51 | 8-16 | ~8 GB | 30-60 min |
+| 241×241×101 | 32-64 | ~32 GB | 2-4 hours |
+
+### Scaling Recommendations
+
+- **Small tests:** 1-4 processes sufficient
+- **Production runs:** Use 1 MPI task per 2-4 CPU cores
+- **Memory:** ~1-2 GB per million grid points
+- **Time limits:** Add 50% buffer to estimates
+
+### Example Resource Requests
+
+**Small test run:**
+```bash
+#SBATCH --nodes=1
+#SBATCH --ntasks=4
+#SBATCH --time=00:30:00
+```
+
+**Medium production run:**
+```bash
+#SBATCH --nodes=2
+#SBATCH --ntasks=32
+#SBATCH --time=04:00:00
+```
+
+**Large simulation:**
+```bash
+#SBATCH --nodes=4
+#SBATCH --ntasks=64
+#SBATCH --time=24:00:00
+```
+
+## Software Versions
+
+This distribution includes:
+
+- **PISM**: 2.2.2 (commit d6b3a29ca, March 2025)
+- **PETSc**: 3.21.6
+- **NetCDF-C**: 4.9.2
+- **NetCDF-CXX4**: 4.3.1
+- **FFTW**: 3.3.10
+- **GSL**: 2.7.1
+- **OpenMPI**: 5.0.5
+- **GCC**: 13.2.0
+
+Compiled with `-O3 -march=sandybridge` for optimal performance on CEOAS HPC.
+
+## Interactive Testing
+
+For quick tests or debugging:
+
+```bash
+# Request interactive session
+srun --partition=ceoas --nodes=1 --ntasks=1 --time=00:30:00 --pty bash
+
+# Load environment
+source ~/pism/active_pism.sh
+
+# Check PISM version
+pism -version
+
+# Run a quick test (single core)
+pism -test G -y 200
+
+# Try a small parallel test
+mpirun --bind-to none --oversubscribe -np 4 pism -test G -y 500
+```
+
+## Cleaning Up
+
+### Remove Old Job Outputs
+
+```bash
+cd ~/pism/pism_binaries
+
+# Remove old log files
+rm -f *_output_*.log *_error_*.log
+
+# Remove old simulation runs
+rm -rf runs/run_*
+```
+
+### Disk Usage
+
+Check installation size:
+```bash
+du -sh ~/pism
+# Expected: 200-300 MB
+
+du -sh ~/pism/pism_binaries/runs/
+# Depends on simulation outputs
+```
+
+## Getting Help
+
+### PISM Resources
+
+- **Official Documentation**: https://www.pism.io/docs/
+- **PISM Website**: https://www.pism.io
+- **GitHub Repository**: https://github.com/pism/pism
+- **Discussion Forum**: https://github.com/pism/pism/discussions
+- **Email Support**: uaf-pism@alaska.edu
+
+### This Distribution
+
+- **GitHub Issues**: https://github.com/luckychen/PISM_dist_OSU_HPC/issues
+- **Repository**: https://github.com/luckychen/PISM_dist_OSU_HPC
+
+### CEOAS HPC Support
+
+Contact your system administrator for:
+- Cluster access issues
+- SLURM problems
+- Partition availability
+- Spack environment issues
+
+## Citation
+
+If you use PISM in your research, please cite:
+
+> The PISM Authors (2025). PISM, a Parallel Ice Sheet Model. https://www.pism.io
+
+For specific publications, see: https://www.pism.io/publications/
+
+## License
+
+PISM is open source software distributed under the GNU General Public License v3.0.
+
+## Quick Reference Card
+
+```bash
+# Installation
+cd ~ && git clone https://github.com/luckychen/PISM_dist_OSU_HPC.git pism
+
+# Verify
+cd ~/pism/pism_binaries && bash verify_setup.sh
+
+# Submit test
+sbatch run_pism_sample.slurm
+
+# Check status
+squeue -u $USER
+
+# Interactive test
+srun --partition=ceoas --pty bash
+source ~/pism/active_pism.sh
+pism -test G -y 200
+
+# View help
+pism --help
+```
+
+## What Makes This Portable?
+
+This distribution works for any user on CEOAS HPC because:
+
+1. **No Hard-Coded Paths**: Uses `${BASH_SOURCE[0]}` to find installation location
+2. **Shared Spack Libraries**: Relies on cluster-wide Spack at `/local/cluster/CEOAS/spack/`
+3. **Bundled Dependencies**: Includes PETSc, NetCDF, FFTW in the repository
+4. **Single Setup Script**: One source command loads everything
+5. **Verified on Multiple Accounts**: Tested by different users
+
+You can clone this anywhere in your home directory and it will work.
+
+## Advanced Usage
+
+### Using PISM with Your Own Input Files
+
+```bash
+# Example: Restart from previous simulation
+mpirun -np 8 pism \
+    -i previous_output.nc \
+    -y 10000 \
+    -o continued_output.nc
+```
+
+### Running Different Ice Sheet Models
+
+```bash
+# Antarctic Ice Sheet (requires input data)
+mpirun -np 16 pism \
+    -i antarctica_data.nc \
+    -bootstrap \
+    -Mx 201 -My 201 -Mz 51 \
+    -y 100000 \
+    -o antarctica_output.nc
+
+# Greenland Ice Sheet (requires input data)
+mpirun -np 16 pism \
+    -i greenland_data.nc \
+    -bootstrap \
+    -Mx 301 -My 561 -Mz 101 \
+    -y 50000 \
+    -o greenland_output.nc
+```
+
+### Time Series and Spatial Outputs
+
+```bash
+mpirun -np 8 pism \
+    -test G \
+    -y 10000 \
+    -o final_state.nc \
+    -ts_file time_series.nc \
+    -ts_times 0:100:10000 \
+    -extra_file snapshots.nc \
+    -extra_times 0:1000:10000 \
+    -extra_vars thk,usurf,velsurf_mag
+```
+
+## Project Status
+
+**Status**: ✅ Complete and tested (January 2026)
+
+**Tested on:**
+- CEOAS HPC cluster nodes (hina01, etc.)
+- Multiple user accounts
+- Various job configurations
+
+**Last updated**: January 13, 2026
+
+---
+
+**Happy ice sheet modeling!** 🧊⛰️
+
+For questions about this distribution, open an issue on GitHub:
+https://github.com/luckychen/PISM_dist_OSU_HPC/issues
