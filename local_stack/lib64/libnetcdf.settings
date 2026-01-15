@@ -5,25 +5,25 @@
 -------
 NetCDF Version:		4.9.2
 Dispatch Version:       5
-Configured On:		Fri 09 Jan 2026 12:28:33 PM PST
-Host System:		x86_64-Linux-5.14.0-362.8.1.el9_3.x86_64
-Build Directory: 	/home/ceoas/chenchon/pism/netcdf-c-4.9.2/build
-Install Prefix:         /home/ceoas/chenchon/pism/local_stack
+Configured On:		Wed 14 Jan 2026 03:50:34 PM PST
+Host System:		x86_64-Linux-5.14.0-503.31.1.el9_5.x86_64
+Build Directory: 	/fs1/home/ceoas/chenchon/pism/netcdf-c-4.9.2/build
+Install Prefix:         /fs1/home/ceoas/chenchon/pism/local_stack
 Plugin Install Prefix:  N.A.
 
 # Compiling Options
 -----------------
 C Compiler:		/fs1/local/ceoas/spack/opt/spack/linux-rocky9-sandybridge/gcc-13.2.0/openmpi-5.0.5-gpan6gdak7hjotoqee2umdghes7xfv2r/bin/mpicc
-CFLAGS:			-O3 -march=sandybridge -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -g -Wall -Wconversion
+CFLAGS:			-O3 -march=sandybridge -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -O3 -DNDEBUG
 CPPFLAGS:		 
-LDFLAGS:		  -Wl,--no-undefined
+LDFLAGS:		 
 AM_CFLAGS:		
 AM_CPPFLAGS:		
 AM_LDFLAGS:		
 Shared Library:		yes
 Static Library:		no
-Extra libraries:	-lhdf5_hl -lhdf5 -lm -lz -lzstd -lbz2 -lcurl -lxml2
-XML Parser:             libxml2
+Extra libraries:	-lhdf5_hl-shared -lhdf5-shared -lm -lz -lzstd -lbz2 -lcurl
+XML Parser:             tinyxml2 (bundled)
 
 # Features
 --------
@@ -36,8 +36,8 @@ CDF5 Support:		yes
 NC-4 Parallel Support:	yes
 PnetCDF Support:	no
 
-DAP2 Support:		no
-DAP4 Support:		no
+DAP2 Support:		yes
+DAP4 Support:		yes
 Byte-Range Support:	yes
 
 S3 Support:	        no
@@ -54,8 +54,8 @@ Relaxed Boundary Check:	yes
 Multi-Filter Support:	yes
 Quantization:		yes
 Logging:     		no
-SZIP Write Support:     yes
-Standard Filters:       deflate szip zstd bz2
+SZIP Write Support:     no
+Standard Filters:       deflate zstd bz2
 ZSTD Support:           yes
 Parallel Filters:       yes
 

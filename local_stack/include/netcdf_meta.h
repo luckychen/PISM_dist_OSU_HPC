@@ -43,17 +43,17 @@
 #define NC_HAS_NC4       1 /*!< API version 4 support. */
 #define NC_HAS_HDF4      0 /*!< HDF4 support. */
 #define NC_HAS_HDF5      1 /*!< HDF5 support. */
-#define NC_HAS_SZIP      1 /*!< szip support */
-#define NC_HAS_SZIP_WRITE 1 /*!< szip write support */
-#define NC_HAS_DAP2      0 /*!< DAP2 support. */
-#define NC_HAS_DAP4      0 /*!< DAP4 support. */
+#define NC_HAS_SZIP      0 /*!< szip support */
+#define NC_HAS_SZIP_WRITE 0 /*!< szip write support */
+#define NC_HAS_DAP2      1 /*!< DAP2 support. */
+#define NC_HAS_DAP4      1 /*!< DAP4 support. */
 #define NC_HAS_BYTERANGE 1 /*!< Byterange support. */
 #define NC_HAS_DISKLESS  1 /*!< diskless support. */
 #define NC_HAS_MMAP      1 /*!< mmap support. */
 #define NC_HAS_JNA       0 /*!< jna support. */
 #define NC_HAS_PNETCDF   0 /*!< PnetCDF support. */
 #define NC_HAS_PARALLEL4 1 /*!< parallel IO support via HDF5 */
-#define NC_HAS_PARALLEL  0 /*!< parallel IO support via HDF5 and/or PnetCDF. */
+#define NC_HAS_PARALLEL  1 /*!< parallel IO support via HDF5 and/or PnetCDF. */
 
 #define NC_HAS_CDF5          1 /*!< CDF5 support. */
 #define NC_HAS_ERANGE_FILL   1 /*!< ERANGE_FILL Support. */

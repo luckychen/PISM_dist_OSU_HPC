@@ -60,7 +60,7 @@ add_library(netCDF::netcdf SHARED IMPORTED)
 
 set_target_properties(netCDF::netcdf PROPERTIES
   INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;${_IMPORT_PREFIX}/include"
-  INTERFACE_LINK_LIBRARIES "dl;/usr/lib64/libhdf5_hl.so;/usr/lib64/libhdf5.so;/usr/lib64/libm.so;/fs1/local/ceoas/spack/opt/spack/linux-rocky9-sandybridge/gcc-13.2.0/zlib-ng-2.1.6-be2z2spal7uib5osqfouapstexwk5ckg/lib/libz.so;/fs1/local/ceoas/spack/opt/spack/linux-rocky9-sandybridge/gcc-13.2.0/zstd-1.5.6-yyleutyvh2vnic2yny7v4miy33xo5dwg/lib/libzstd.so;/fs1/local/ceoas/spack/opt/spack/linux-rocky9-sandybridge/gcc-13.2.0/bzip2-1.0.8-pntcq57bedjreo7zhtgruzt6obcfo26w/lib/libbz2.so;/fs1/local/ceoas/spack/opt/spack/linux-rocky9-sandybridge/gcc-13.2.0/curl-8.7.1-fdjjtwq7p5smsc6bx6jctnugkoe6g2cn/lib/libcurl.so;/fs1/local/ceoas/spack/opt/spack/linux-rocky9-sandybridge/gcc-13.2.0/libxml2-2.10.3-gh3ga5sot6udeya7l4iriwg7rcnmv4zj/lib/libxml2.so"
+  INTERFACE_LINK_LIBRARIES "dl;hdf5_hl-shared;hdf5-shared;/usr/lib64/libm.so;/fs1/local/ceoas/spack/opt/spack/linux-rocky9-sandybridge/gcc-13.2.0/zlib-ng-2.1.6-be2z2spal7uib5osqfouapstexwk5ckg/lib/libz.so;/fs1/local/ceoas/spack/opt/spack/linux-rocky9-sandybridge/gcc-13.2.0/zstd-1.5.6-yyleutyvh2vnic2yny7v4miy33xo5dwg/lib/libzstd.so;/fs1/local/ceoas/spack/opt/spack/linux-rocky9-sandybridge/gcc-13.2.0/bzip2-1.0.8-pntcq57bedjreo7zhtgruzt6obcfo26w/lib/libbz2.so;/fs1/local/ceoas/spack/opt/spack/linux-rocky9-sandybridge/gcc-13.2.0/curl-8.7.1-fdjjtwq7p5smsc6bx6jctnugkoe6g2cn/lib/libcurl.so"
 )
 
 if(CMAKE_VERSION VERSION_LESS 2.8.12)

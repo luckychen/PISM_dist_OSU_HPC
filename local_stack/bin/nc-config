@@ -4,26 +4,26 @@
 # various things about the netCDF installation. This code was
 # contributed by netCDF user Arlindo DaSilva. Thanks Arlindo!
 
-prefix="/home/ceoas/chenchon/pism/local_stack"
-exec_prefix="/home/ceoas/chenchon/pism/local_stack"
-libdir="/home/ceoas/chenchon/pism/local_stack/lib64"
-includedir="/home/ceoas/chenchon/pism/local_stack/include"
+prefix="/fs1/home/ceoas/chenchon/pism/local_stack"
+exec_prefix="/fs1/home/ceoas/chenchon/pism/local_stack"
+libdir="/fs1/home/ceoas/chenchon/pism/local_stack/lib64"
+includedir="/fs1/home/ceoas/chenchon/pism/local_stack/include"
 plugindir=""
 
 cc="/fs1/local/ceoas/spack/opt/spack/linux-rocky9-sandybridge/gcc-13.2.0/openmpi-5.0.5-gpan6gdak7hjotoqee2umdghes7xfv2r/bin/mpicc"
-cflags="-I/home/ceoas/chenchon/pism/local_stack/include"
-libs="-L/home/ceoas/chenchon/pism/local_stack/lib64 -lnetcdf"
-libsprivate="-lhdf5_hl -lhdf5 -lm -lz -lzstd -lbz2 -lcurl -lxml2"
+cflags="-I/fs1/home/ceoas/chenchon/pism/local_stack/include"
+libs="-L/fs1/home/ceoas/chenchon/pism/local_stack/lib64 -lnetcdf"
+libsprivate="-lhdf5_hl-shared -lhdf5-shared -lm -lz -lzstd -lbz2 -lcurl"
 HAS_STATIC=""
 
-has_dap2="OFF"
+has_dap2="ON"
 if [ -z $has_dap2 -o "$has_dap2" = "OFF" ]; then
     has_dap2="no"
 else
     has_dap2="yes"
 fi
 
-has_dap4="OFF"
+has_dap4="ON"
 if [ -z $has_dap4 -o "$has_dap4" = "OFF" ]; then
     has_dap4="no"
 else
@@ -88,14 +88,14 @@ else
     has_cdf5="yes"
 fi
 
-has_parallel4=""
+has_parallel4="ON"
 if [ -z $has_parallel4 ]; then
     has_parallel4="no"
 else
     has_parallel4="yes"
 fi
 
-has_parallel="OFF"
+has_parallel="ON"
 if [ -z $has_parallel ]; then
     has_parallel="no"
 else
@@ -213,7 +213,7 @@ all()
         echo "  --has-zstd         -> $has_zstd"
         echo "  --has-benchmarks   -> $has_benchmarks"
         echo "  --has-multifilters -> $has_multifilters"
-        echo "  --has-stdfilters   -> deflate szip zstd bz2"
+        echo "  --has-stdfilters   -> deflate zstd bz2"
         echo "  --has-quantize     -> $has_quantize"
         echo
         echo "  --prefix        -> $prefix"
@@ -338,7 +338,7 @@ while test $# -gt 0; do
         ;;
 
     --has-stdfilters)
-        echo deflate szip zstd bz2
+        echo deflate zstd bz2
         ;;
 
     --has-quantize)
