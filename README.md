@@ -168,6 +168,27 @@ NUMERICAL ERRORS evaluated at final time:
 
 All errors should be very small (< 0.01), indicating a successful test.
 
+## Important: Python Utilities Require Conda Environment
+
+The `~/pism/pism_binaries/bin/` directory contains several utility scripts (in addition to the main `pism` executable) for post-processing and data analysis:
+
+- `pism_flowline` - 1D flowline model
+- `pism_nc2cdo` - Convert output for CDO climate tools
+- `pism_fill_missing` - Fill missing data in NetCDF files
+- `pism_check_stationarity` - Check steady-state convergence
+- `pism_adjust_timeline` - Adjust model timeline
+- `pism_create_timeline` - Create model timeline
+- `pism_fill_missing_petsc` - Fill missing data (PETSc version)
+- `pism_nccmp` - Compare netCDF files
+- `pism_plot_profiling` - Plot profiling results
+
+**These are Python scripts** (not compiled binaries) and require Python with scientific packages installed. They **will not work** without conda or a Python environment containing:
+- `netCDF4`
+- `numpy`
+- And other dependencies depending on which utility you use
+
+**Note:** Conda is not available in the default HPC environment. You need to install conda in your home directory if you want to use these Python utilities. The main `pism` executable (the ice sheet model itself) does not require conda and works immediately after sourcing `active_pism.sh`.
+
 ## Running Multi-Node Simulations
 
 PISM supports parallel execution across multiple compute nodes using MPI. This allows you to run larger simulations with higher resolution and better performance.
@@ -389,11 +410,21 @@ pism --help
 
 The `~/pism/pism_binaries/bin/` directory includes:
 
-- `pism` - Main PISM executable (use this for tests and simulations)
+**Main Executable:**
+- `pism` - Main PISM executable (use this for tests and simulations) ✅
+
+**Python Utility Scripts** (require conda environment):
 - `pism_flowline` - 1D flowline model
 - `pism_nc2cdo` - Convert output for CDO climate tools
 - `pism_fill_missing` - Fill missing data in NetCDF files
 - `pism_check_stationarity` - Check steady-state convergence
+- `pism_adjust_timeline` - Adjust model timeline
+- `pism_create_timeline` - Create model timeline
+- `pism_fill_missing_petsc` - Fill missing data (PETSc version)
+- `pism_nccmp` - Compare netCDF files
+- `pism_plot_profiling` - Plot profiling results
+
+See the **Python Utilities Require Conda Environment** section above for setup instructions.
 
 ## Example Simulations
 
