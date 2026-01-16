@@ -26,7 +26,7 @@
 
 namespace pism {
 
-/* Path to PISM's configuration file (/fs1/home/ceoas/chenchon/pism/pism_binaries/share/pism/pism_config.nc) */
+/* Path to PISM's configuration file (PORTABLE_INSTALL_USE_CONFIG_FLAG) */
 extern const char *config_file;
 
 /* PISM's revision string (2.2.2-d6b3a29ca committed by Constantine Khrulev on 2025-03-28) */
