@@ -67,10 +67,10 @@ fi
 
 # Check PISM version
 echo "[5/6] Checking PISM version..."
-if mpirun -np 1 pism -version &> /dev/null; then
+if mpirun -np 1 pism -config "$PISM_PACKAGE_ROOT/pism_binaries/share/pism/pism_config.nc" -version &> /dev/null; then
     echo "✓ PISM runs successfully"
     echo "  Version info:"
-    mpirun -np 1 pism -version 2>&1 | head -5 | sed 's/^/    /'
+    mpirun -np 1 pism -config "$PISM_PACKAGE_ROOT/pism_binaries/share/pism/pism_config.nc" -version 2>&1 | head -5 | sed 's/^/    /'
 else
     echo "✗ PISM failed to run"
     exit 1

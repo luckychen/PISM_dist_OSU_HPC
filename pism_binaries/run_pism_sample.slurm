@@ -62,6 +62,7 @@ echo "Running for 200 model years..."
 echo ""
 
 mpirun -np $SLURM_NTASKS --bind-to none --oversubscribe pism \
+  -config "$PISM_PACKAGE_ROOT/pism_binaries/share/pism/pism_config.nc" \
   -test G \
   -Mx 61 -My 61 -Mz 31 \
   -y 200 \

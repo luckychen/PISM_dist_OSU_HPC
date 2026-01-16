@@ -53,6 +53,7 @@ echo ""
 # Duration: 1000 model years
 mpirun --bind-to none --oversubscribe \
     -np $SLURM_NTASKS pism \
+    -config "$PISM_PACKAGE_ROOT/pism_binaries/share/pism/pism_config.nc" \
     -test G \
     -Mx 121 -My 121 -Mz 51 \
     -y 1000 \
