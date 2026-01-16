@@ -36,8 +36,8 @@ export PATH="$PISM_PACKAGE_ROOT/pism_binaries/bin:$PATH"
 
 export LD_LIBRARY_PATH="$PISM_PACKAGE_ROOT/local_stack/lib:$PISM_PACKAGE_ROOT/petsc-install/lib:$LIA_LIB_DIR:$GSL_LIB_DIR:$BZIP2_LIB_DIR:$HDF5_LIB_DIR:$ZLIB_LIB_DIR:$LD_LIBRARY_PATH"
 
-# 6. FIX THE HARD-CODED CONFIG PATH
-# This tells PISM to use the config file inside this portable folder
+# 6. Set config file path to portable location
+# Uses PISM_PACKAGE_ROOT which is dynamically determined from script location
 export PISM_CONFIG_NC="$PISM_PACKAGE_ROOT/pism_binaries/share/pism/pism_config.nc"
 
 echo "------------------------------------------------"
