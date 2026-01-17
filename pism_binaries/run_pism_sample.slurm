@@ -42,7 +42,7 @@ echo ""
 echo "======== PISM Environment ========"
 echo "PISM executable: $(which pism)"
 echo "PISM version:"
-pism -version
+pism -config "$PISM_PACKAGE_ROOT/pism_binaries/share/pism/pism_config.nc" -version
 echo "=================================="
 echo ""
 
