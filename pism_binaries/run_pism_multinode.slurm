@@ -26,9 +26,7 @@ echo ""
 # Load PISM environment
 echo "Loading PISM environment..."
 # Get the directory where this script is located
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PISM_ROOT="$(dirname "$SCRIPT_DIR")"
-cd "$PISM_ROOT"
+cd $SLURM_SUBMIT_DIR/../
 source active_pism.sh
 echo "PISM environment loaded successfully"
 echo ""
